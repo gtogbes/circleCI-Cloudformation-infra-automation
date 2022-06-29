@@ -29,9 +29,9 @@ commands:
             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
           
 jobs:
-  Exercise: Creating a Simple Workflow
-  Exercise: Environment Variables
-  Exercise: Reusable Job Code 
+  #Exercise: Creating a Simple Workflow
+  #Exercise: Environment Variables
+  #Exercise: Reusable Job Code 
   print_greetings:
     docker:
       - image: circleci/node:13.8.0
