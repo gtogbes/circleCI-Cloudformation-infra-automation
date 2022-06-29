@@ -78,7 +78,24 @@ jobs:
       # Fail the job intentionally to simulate an error.
       # Uncomment the line below if you want to fail the current step
       # - run: return 1
-      - destroy_environment
+  
+   # Exercise: Config and Deployment
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["74:2e:3f:22:42:b1:52:9a:b4:95:f0:34:1e:d4:eb:aa"] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory.txt main-remote.yml
 
 workflows:
   # Name the workflow "welcome"
@@ -92,3 +109,4 @@ workflows:
           requires:
             - upload_file
       - create_infrastructure
+      - configure_infrastructure
