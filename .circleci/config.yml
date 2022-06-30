@@ -32,89 +32,89 @@ jobs:
   #Exercise: Creating a Simple Workflow
   #Exercise: Environment Variables
   #Exercise: Reusable Job Code 
-  print_greetings:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - print_pipeline_id:
-          id: << pipeline.id >>
-      - run: echo HELLO
-      - run: echo WORLD
-      - run: echo $_env_name
+  # print_greetings:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - print_pipeline_id:
+  #         id: << pipeline.id >>
+  #     - run: echo HELLO
+  #     - run: echo WORLD
+  #     - run: echo $_env_name
 
-  # Exercise: Sharing Files (Job names may have changed)
-  upload_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
-      - persist_to_workspace:
-          root: ~/
-          paths: 
-            - output.txt  
+  # # Exercise: Sharing Files (Job names may have changed)
+  # upload_file:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - run: echo "THIS IS A SAMPLE TEXT" > ~/output.txt  
+  #     - persist_to_workspace:
+  #         root: ~/
+  #         paths: 
+  #           - output.txt  
 
-  download_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run: cat ~/output.txt 
+  # download_file:
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run: cat ~/output.txt 
  
-  # Exercise: Infrastructure Creation
-  # Exercise - Rollback
-  create_infrastructure: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-              --template-file server.yaml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID} \
-              --region us-east-1
-      # Fail the job intentionally to simulate an error.
-      # Uncomment the line below if you want to fail the current step
-      - run: return 1
-      - destroy_environment
-      # - run: return 1
+  # # Exercise: Infrastructure Creation
+  # # Exercise - Rollback
+  # create_infrastructure: 
+  #   docker:
+  #     - image: amazon/aws-cli
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Create Cloudformation Stack
+  #         command: |
+  #           aws cloudformation deploy \
+  #             --template-file server.yaml \
+  #             --stack-name myStack-${CIRCLE_WORKFLOW_ID} \
+  #             --region us-east-1
+  #     # Fail the job intentionally to simulate an error.
+  #     # Uncomment the line below if you want to fail the current step
+  #     - run: return 1
+  #     - destroy_environment
+  #     # - run: return 1
       
-   # Exercise: Config and Deployment
-  configure_infrastructure: 
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["74:2e:3f:22:42:b1:52:9a:b4:95:f0:34:1e:d4:eb:aa"] # You can get this ID in the section where you registered the SSH Key
-      - run:
-          name: Install dependencies
-          command: |
-            # install the dependencies needed for your playbook
-            apk add --update ansible 
-      - run:
-          name: Configure server
-          command: |
-            ansible-playbook -i inventory.txt main-remote.yml
-  #Exercise: Smoke Testing
-  smoke_test:
-    docker:
-      - image: alpine:latest
-    steps:
-      - run: apk add --update curl
-      - run:
-          name: smoke test
-          command: |
-            URL="https://blog.udacity.com/"
-            # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
+  #  # Exercise: Config and Deployment
+  # configure_infrastructure: 
+  #   docker:
+  #     - image: python:3.7-alpine3.11
+  #   steps:
+  #     - checkout
+  #     - add_ssh_keys:
+  #         fingerprints: ["74:2e:3f:22:42:b1:52:9a:b4:95:f0:34:1e:d4:eb:aa"] # You can get this ID in the section where you registered the SSH Key
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           # install the dependencies needed for your playbook
+  #           apk add --update ansible 
+  #     - run:
+  #         name: Configure server
+  #         command: |
+  #           ansible-playbook -i inventory.txt main-remote.yml
+  # #Exercise: Smoke Testing
+  # smoke_test:
+  #   docker:
+  #     - image: alpine:latest
+  #   steps:
+  #     - run: apk add --update curl
+  #     - run:
+  #         name: smoke test
+  #         command: |
+  #           URL="https://blog.udacity.com/"
+  #           # Test if website exists
+  #           if curl -s --head ${URL} 
+  #           then
+  #             return 0
+  #           else
+  #             return 1
+  #           fi
 
 
 
